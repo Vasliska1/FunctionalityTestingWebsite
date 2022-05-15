@@ -1,53 +1,69 @@
 package unauthorized;
 
-import configuration.ConfigurationProvider;
-import org.junit.jupiter.api.BeforeEach;
+import configuration.ConfigurationSetUpTest;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import pageObject.MainPage;
-
-import java.util.concurrent.TimeUnit;
+import org.openqa.selenium.JavascriptExecutor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class MainPageTest {
+public class MainPageTest extends ConfigurationSetUpTest {
 
-    ChromeDriver driver;
-    MainPage mainPage;
+    private static JavascriptExecutor javascriptExecutor;
 
-    @BeforeEach
-    public void setUp(){
-        System.setProperty("webdriver.chrome.driver", ConfigurationProvider.getProperty("chrome_driver_path"));
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("start-maximized"); // open Browser in maximized mode
-        options.addArguments("--no-sandbox"); // Bypass OS security model
-
-        driver = new ChromeDriver(options);
-        mainPage = new MainPage(driver);
-        driver.get("https://worldoftanks.ru/");
+    @BeforeAll
+    public static void setUp() {
+        javascriptExecutor = (JavascriptExecutor) driver;
     }
 
     @Test
-    public void testDownloadGameDropDownButton(){
-        mainPage.clickToGameDropDown();
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        mainPage.clickToDownloadGameDropDownButton();
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        assertTrue(driver.getCurrentUrl().contains("https://worldoftanks.ru/ru/game/download/"));
+    public void gameButtonTest() {
+        mainPage.clickGameButton();
+        Assertions.assertEquals("https://worldoftanks.ru/ru/game/", driver.getCurrentUrl());
     }
 
     @Test
-    public void testDownloadGameButton(){
-        mainPage.clickToGameDropDown();
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        mainPage.clickToDownloadGameDropDownButton();
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        mainPage.clickToDownloadGameDropDownButton();
-        assertEquals("Спасибо за загрузку!", mainPage.getSuccessDownloadText());
+    public void gameDownloadButtonTest() {
+        mainPage.clickGameSubmenu();
+        mainPage.clickDownloadGameDropDownButton();
+        Assertions.assertEquals("https://worldoftanks.ru/ru/game/download/", driver.getCurrentUrl());
     }
 
+    @Test
+    public void contentGuideButtonTest(){
+        mainPage.clickContentGuide();
+        Assertions.assertEquals("https://worldoftanks.ru/ru/content/guide/", driver.getCurrentUrl());
+    }
 
+    @Test
+    public void tournamentsButtonTest(){
+        mainPage.clickTournamentsButton();
+        Assertions.assertEquals("https://worldoftanks.ru/ru/tournaments/", driver.getCurrentUrl());
+    }
 
+    @Test
+    public void communityButtonTest(){
+        mainPage.clickCommunityButton();
+        Assertions.assertEquals("https://worldoftanks.ru/ru/community/", driver.getCurrentUrl());
+    }
+
+    @Test
+    public void clanwarsButtonTest(){
+        mainPage.clickClanwarsButton();
+        assertTrue(driver.getCurrentUrl().startsWith("https://worldoftanks.ru/ru/clanwars/"));
+    }
+
+    @Test
+    public void mediaDropDownButtonTest(){
+        mainPage.clickCommunitySubmenu();
+        mainPage.clickMediaDropDownButton();
+        Assertions.assertEquals("https://worldoftanks.ru/ru/media/", driver.getCurrentUrl());
+    }
+    @AfterAll
+    public static void  quit() {
+        driver.quit();
+    }
 }

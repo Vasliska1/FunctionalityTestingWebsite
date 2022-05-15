@@ -1,6 +1,7 @@
 package authorized;
 
 import configuration.ConfigurationSetUpTest;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ public class LoginTest extends ConfigurationSetUpTest {
 
 
     @Test
-    public void testAutorization(){
+    public void autorizationTest(){
         mainPage.clickLogin();
         ConfigurationSetUpTest.loginPage.inputLogin("v.lisitsina@gmail.com");
         ConfigurationSetUpTest.loginPage.inputPassword("Vasilisa2023");
@@ -36,7 +37,7 @@ public class LoginTest extends ConfigurationSetUpTest {
     }
 
     @Test
-    public void testFailedAutorization(){
+    public void failedAutorizationTest(){
         mainPage.clickLogin();
         ConfigurationSetUpTest.loginPage.inputLogin("v.lisitsina@gmail.com");
         ConfigurationSetUpTest.loginPage.inputPassword("VasilisaLoh");
@@ -46,7 +47,7 @@ public class LoginTest extends ConfigurationSetUpTest {
     }
 
     @Test
-    public void testLogOut(){
+    public void logOutTest(){
         mainPage.clickLogin();
         ConfigurationSetUpTest.loginPage.inputLogin("v.lisitsina@gmail.com");
         ConfigurationSetUpTest.loginPage.inputPassword("Vasilisa2023");
@@ -54,5 +55,9 @@ public class LoginTest extends ConfigurationSetUpTest {
         profilePage.clickUserMenuHolder();
         profilePage.clickLogOutButton();
         assertTrue(mainPage.isLoginButtonExist());
+    }
+    @AfterAll
+    public static void  quit() {
+        driver.quit();
     }
 }
