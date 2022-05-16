@@ -1,6 +1,7 @@
 package authorized;
 
 import configuration.ConfigurationSetUpTest;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -22,20 +24,18 @@ public class RegistrationTest extends ConfigurationSetUpTest {
     }
 
     @ParameterizedTest
-    @CsvSource("WhyDontYAskCaptcha3@mail.ru,WhyDontYAskCaptcha3,TestPassword")
+    @CsvSource("WhyDontYAskCaptcha11@mail.ru,WhyDontYAskCaptcha11,TestPassword")
     public void registerSuccessTest(String email, String username, String password) {
         mainPage.clickCreateAccountButton();
-        registrationPage.clickRegButton();
-
-        // registrationPage.clickNewPlayerButton();
         registrationPage.inputEmail(email);
         registrationPage.inputPassword(password);
         registrationPage.inputNickName(username);
-        // driver.findElement(By.id("id_eula")).click();
+        javascriptExecutor.executeScript("window.scrollTo(0, document.body.scrollHeight);");
         registrationPage.clickRegButton();
         javascriptExecutor.executeScript("arguments[0].click();", registrationPage.clickAgreeCheckBox());
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         registrationPage.clickRegButton();
+        wait.until(ExpectedConditions.urlMatches("https://ru.wargaming.net/registration/ru/download"));
         Assertions.assertTrue(driver.getCurrentUrl().startsWith("https://ru.wargaming.net/registration/ru/download"));
     }
+
 }

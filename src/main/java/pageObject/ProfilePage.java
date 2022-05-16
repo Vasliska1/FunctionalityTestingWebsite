@@ -1,5 +1,6 @@
 package pageObject;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -65,7 +66,7 @@ public class ProfilePage {
     @FindBy(xpath = "/html/body/div[1]/div/div/div[2]/div/div/fieldset/a")
     private WebElement finishChanges;
 
-    @FindBy(xpath = "/html/body/div[1]/div/div[3]/div[1]/div/div[1]/div[1]/div[2]/div/div[3]/div/div[1]/a")
+    @FindBy(xpath = "//a[@class=\"cm-footer-logout_link js-cm-event js-cm-link-ignore-target\"]")
     private WebElement logOutButton;
 
     @FindBy(xpath = "/html/body/div[1]/div/div/div[2]/div[2]/form/fieldset/div[2]/button")
@@ -78,6 +79,7 @@ public class ProfilePage {
     }
 
     public void clickLogOutButton(){
+        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         logOutButton.click();
     }
 
@@ -95,7 +97,8 @@ public class ProfilePage {
     }
 
     public void goToPersonalArea() {
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        WebDriverWait wait = new WebDriverWait(driver, 30);
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div[1]/div/div[3]/div[1]/div/div[1]/div[1]/div[2]/div/div[3]/ul/li[1]/a/span")));
         linkToPersonalArea.click();
     }
 

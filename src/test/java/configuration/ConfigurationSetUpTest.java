@@ -1,17 +1,16 @@
 package configuration;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxBinary;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.firefox.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pageObject.*;
 
 import java.io.File;
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 public class ConfigurationSetUpTest {
@@ -29,8 +28,9 @@ public class ConfigurationSetUpTest {
     public static RegistrationPage registrationPage;
 
     @BeforeAll
-    public static void setup(){
-        driver = initWebDriver();
+    public static void setup() {
+        initWebDriver();
+        wait = new WebDriverWait(driver, 30);
         mainPage = new MainPage(driver);
         profilePage = new ProfilePage(driver);
         loginPage = new LoginPage(driver);
@@ -41,34 +41,30 @@ public class ConfigurationSetUpTest {
         gamePage = new GamePage(driver);
         registrationPage = new RegistrationPage(driver);
         battlePassPage = new BattlePassPage(driver);
-       // driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(40, TimeUnit.SECONDS);
         driver.get("https://worldoftanks.ru/");
     }
 
-    public static WebDriver initWebDriver() {
-        System.out.println(2);
+    public static void initWebDriver() {
         if (ConfigurationProvider.getProperty("main_driver").equals("CHROME")) {
-            System.out.println(1);
             ChromeOptions options = new ChromeOptions();
             options.addArguments("start-maximized"); // open Browser in maximized mode
             options.addArguments("--no-sandbox"); // Bypass OS security model
             driver = new ChromeDriver(options);
             System.setProperty("webdriver.chrome.driver", ConfigurationProvider.getProperty("chrome_driver_path"));
 
-           } else if (ConfigurationProvider.getProperty("main_driver").equals("FIREFOX")) {
-           
-            System.setProperty("webdriver.firefox.driver", ConfigurationProvider.getProperty("mozilla_driver_path"));
-            FirefoxOptions options = new FirefoxOptions();
-           // System.out.println(options.getBinary());
-            options.addArguments("start-maximized"); // open Browser in maximized mode
-            options.addArguments("--no-sandbox"); // Bypass OS security model
-            FirefoxBinary binary = new FirefoxBinary(new File("Downloads/firefox-portable-95.0/app/firefox"));
-            options.setBinary(binary);
+        } else if (ConfigurationProvider.getProperty("main_driver").equals("FIREFOX")) {
+          //  System.setProperty("webdriver.firefox.bin", "home/vasilisa/Videos/firefox/firefox");
+            System.setProperty("webdriver.gecko.driver", ConfigurationProvider.getProperty("mozilla_driver_path"));
 
-            //File browserAppPath = new File("/snap/firefox/1300/usr/lib/firefox/firefox-bin");
+      //     WebDriverManager.firefoxdriver().setup();
+            FirefoxOptions options = new FirefoxOptions();
+           // FirefoxBinary binary = new FirefoxBinary(new File("/usr/lib/firefox/firefox"));
+       //     options.setBinary("/usr/lib/firefox/firefox");
+
             driver = new FirefoxDriver(options);
+            //driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
+            //driver = new FirefoxDriver(options);
         }
-        return driver;
     }
 }

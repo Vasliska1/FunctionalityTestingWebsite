@@ -13,7 +13,7 @@ public class SectionRatingTest extends ConfigurationSetUpTest {
     private static JavascriptExecutor javascriptExecutor;
 
     @BeforeAll
-    public static void setupRating(){
+    public static void setupRating() {
         javascriptExecutor = (JavascriptExecutor) driver;
         mainPage.clickGameSubmenu();
         mainPage.clickRaitingButton();
@@ -27,7 +27,7 @@ public class SectionRatingTest extends ConfigurationSetUpTest {
     }
 
     @Test
-    public void ratingVehicleTest(){
+    public void ratingVehicleTest() {
         ratingPage.clickRatingVehicle();
         Assertions.assertEquals("https://worldoftanks.ru/ru/ratings/vehicles/", driver.getCurrentUrl());
         javascriptExecutor.executeScript("window.history.go(-1)");
@@ -44,7 +44,7 @@ public class SectionRatingTest extends ConfigurationSetUpTest {
     }
 
     @AfterAll
-    public static void  quit() {
+    public static void quit() {
         driver.quit();
     }
 }

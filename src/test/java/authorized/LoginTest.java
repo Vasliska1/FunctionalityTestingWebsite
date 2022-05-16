@@ -1,5 +1,6 @@
 package authorized;
 
+import configuration.ConfigurationProvider;
 import configuration.ConfigurationSetUpTest;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -14,18 +15,22 @@ import static org.junit.jupiter.api.Assertions.*;
 public class LoginTest extends ConfigurationSetUpTest {
 
     private static JavascriptExecutor javascriptExecutor;
+    private static String email;
+    private static String password;
 
     @BeforeAll
-    public static void setUp(){
+    public static void setUp() {
         javascriptExecutor = (JavascriptExecutor) driver;
+        email = ConfigurationProvider.getProperty("email");
+        password = ConfigurationProvider.getProperty("password");
     }
 
 
     @Test
-    public void autorizationTest(){
+    public void autorizationTest() {
         mainPage.clickLogin();
-        ConfigurationSetUpTest.loginPage.inputLogin("v.lisitsina@gmail.com");
-        ConfigurationSetUpTest.loginPage.inputPassword("Vasilisa2023");
+        ConfigurationSetUpTest.loginPage.inputLogin(email);
+        ConfigurationSetUpTest.loginPage.inputPassword(password);
         ConfigurationSetUpTest.loginPage.clickSubmit();
         profilePage.clickUserMenuHolder();
         profilePage.goToPersonalArea();
@@ -37,9 +42,9 @@ public class LoginTest extends ConfigurationSetUpTest {
     }
 
     @Test
-    public void failedAutorizationTest(){
+    public void failedAutorizationTest() {
         mainPage.clickLogin();
-        ConfigurationSetUpTest.loginPage.inputLogin("v.lisitsina@gmail.com");
+        ConfigurationSetUpTest.loginPage.inputLogin(email);
         ConfigurationSetUpTest.loginPage.inputPassword("VasilisaLoh");
         ConfigurationSetUpTest.loginPage.clickSubmit();
         Assertions.assertTrue(driver.getCurrentUrl().startsWith("https://ru.wargaming.net/id/signin/"));
@@ -47,17 +52,18 @@ public class LoginTest extends ConfigurationSetUpTest {
     }
 
     @Test
-    public void logOutTest(){
+    public void logOutTest() {
         mainPage.clickLogin();
-        ConfigurationSetUpTest.loginPage.inputLogin("v.lisitsina@gmail.com");
-        ConfigurationSetUpTest.loginPage.inputPassword("Vasilisa2023");
+        ConfigurationSetUpTest.loginPage.inputLogin(email);
+        ConfigurationSetUpTest.loginPage.inputPassword(password);
         ConfigurationSetUpTest.loginPage.clickSubmit();
         profilePage.clickUserMenuHolder();
         profilePage.clickLogOutButton();
         assertTrue(mainPage.isLoginButtonExist());
     }
+
     @AfterAll
-    public static void  quit() {
+    public static void quit() {
         driver.quit();
     }
 }

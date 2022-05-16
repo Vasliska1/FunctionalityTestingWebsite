@@ -1,6 +1,7 @@
 package unauthorized;
 
 import configuration.ConfigurationSetUpTest;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.JavascriptExecutor;
@@ -25,5 +26,10 @@ public class GameTest extends ConfigurationSetUpTest {
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         gamePage.clickToDownloadGameButton();
         assertEquals("Спасибо за загрузку!", gamePage.getSuccessDownloadText());
+    }
+
+    @AfterAll
+    public static void  quit() {
+        driver.quit();
     }
 }
