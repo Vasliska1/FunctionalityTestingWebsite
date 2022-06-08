@@ -9,6 +9,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 public class MainPage {
@@ -22,7 +23,7 @@ public class MainPage {
         this.wait = new WebDriverWait(driver, 30);
     }
 
-    @FindBy(xpath = "/html/body/div[1]/div/div[3]/div[1]/div/div[1]/div[1]/a[1]")
+    @FindBy(xpath = "//a[@class=\"cm-link cm-link__register cm-link__no-decoration js-cm-event js-cm-login-link js-cm-link-ignore-target\"]")
     private WebElement login;
 
     @FindBy(xpath = "/html/body/div[1]/div/div[2]/div/ul/li[2]/a/span")
@@ -55,25 +56,26 @@ public class MainPage {
     @FindBy(xpath = "/html/body/div[1]/div/div[2]/div/ul/li[4]/a")
     private WebElement clanwars;
 
-    @FindBy(xpath = "//*[@id=\"registration-form\"]/fieldset[8]/button")
+    @FindBy(xpath = "/html/body/div[1]/div/div[3]/div[1]/div/div[1]/div[4]/a[2]/span")
     private WebElement battlePassButton;
 
     @FindBy(xpath = "/html/body/div[1]/div/div[3]/div[1]/div/div[1]/div[1]/a[2]")
     private WebElement createAccountButton;
 
-    public void clickMediaDropDownButton(){
+    public void clickMediaDropDownButton() {
         mediaDropDownButton.click();
     }
 
-    public void clickClanwarsButton(){
+    public void clickClanwarsButton() {
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[contains(text(), \"Кланы\")]")));
         clanwars.click();
     }
 
-    public void clickCommunitySubmenu(){
+    public void clickCommunitySubmenu() {
         communitySubmenu.click();
     }
 
-    public void clickTournamentsButton(){
+    public void clickTournamentsButton() {
         tournamentsButton.click();
     }
 
@@ -89,22 +91,20 @@ public class MainPage {
         gameButton.click();
     }
 
-    public void clickContentGuide(){
+    public void clickContentGuide() {
         contentGuideButton.click();
     }
 
-    public void clickBattlePassButton(){
+    public void clickBattlePassButton() {
         battlePassButton.click();
     }
 
-    public void clickCreateAccountButton(){
+    public void clickCreateAccountButton() {
         createAccountButton.click();
     }
 
     public void clickLogin() {
-         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-
-       // wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@class=\"cm-link cm-link__register cm-link__no-decoration js-cm-event js-cm-login-link js-cm-link-ignore-target\"]")));
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@class=\"cm-link cm-link__register cm-link__no-decoration js-cm-event js-cm-login-link js-cm-link-ignore-target\"]")));
         login.click();
     }
 

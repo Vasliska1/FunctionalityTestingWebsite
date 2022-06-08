@@ -1,5 +1,7 @@
 package pageObject;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -7,6 +9,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 public class ProfilePage {
@@ -65,7 +68,7 @@ public class ProfilePage {
     @FindBy(xpath = "/html/body/div[1]/div/div/div[2]/div/div/fieldset/a")
     private WebElement finishChanges;
 
-    @FindBy(xpath = "/html/body/div[1]/div/div[3]/div[1]/div/div[1]/div[1]/div[2]/div/div[3]/div/div[1]/a")
+    @FindBy(xpath =  "//a[@class=\"cm-footer-logout_link js-cm-event js-cm-link-ignore-target\"]")
     private WebElement logOutButton;
 
     @FindBy(xpath = "/html/body/div[1]/div/div/div[2]/div[2]/form/fieldset/div[2]/button")
@@ -74,10 +77,11 @@ public class ProfilePage {
     public ProfilePage(WebDriver driver) {
         PageFactory.initElements(driver, this);
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, 30);
+        this.wait = new WebDriverWait(driver, 60);
     }
 
     public void clickLogOutButton(){
+        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         logOutButton.click();
     }
 
@@ -90,12 +94,12 @@ public class ProfilePage {
     }
 
     public void clickUserMenuHolder(){
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"common_menu\"]/div/div[1]/div[1]/a[2]/span[3]")));
         userMenuHolder.click();
     }
 
     public void goToPersonalArea() {
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div[1]/div/div[3]/div[1]/div/div[1]/div[1]/div[2]/div/div[3]/ul/li[1]/a/span")));
         linkToPersonalArea.click();
     }
 
@@ -159,5 +163,14 @@ public class ProfilePage {
 
     public void clickFinishChange(){
         finishChanges.click();
+    }
+
+    public boolean isAccountButtonExist() {
+        try {
+            driver.findElement(By.xpath("//*[@id=\"common_menu\"]/div/div[1]/div[1]/a[2]/span[3]"));
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+        return true;
     }
 }

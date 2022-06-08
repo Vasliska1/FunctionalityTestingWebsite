@@ -1,80 +1,105 @@
 package authorized;
 
-import configuration.ConfigurationSetUpTest;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import configuration.ConfigurationProvider;
+import configuration.Init;
+import org.junit.jupiter.api.*;
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ProfileTest extends ConfigurationSetUpTest {
+public class ProfileTest extends Init {
 
-    private static JavascriptExecutor javascriptExecutor;
+    public static List<WebDriver> driverList;
+    private static String login;
+    private static String password;
 
     @BeforeAll
-    public static void setUp(){
-        javascriptExecutor = (JavascriptExecutor) driver;
-        mainPage.clickLogin();
-        ConfigurationSetUpTest.loginPage.inputLogin("v.lisitsina@gmail.com");
-        ConfigurationSetUpTest.loginPage.inputPassword("Vasilisa2023");
-        ConfigurationSetUpTest.loginPage.clickSubmit();
-        profilePage.clickUserMenuHolder();
-        profilePage.goToPersonalArea();
-    }
-
-
-    @Test
-    public void checkSomeLinkInUserMenuTest(){
-        profilePage.clickChangeNickName();
-        assertEquals("https://ru.wargaming.net/personal/nickname_change/", driver.getCurrentUrl());
-        javascriptExecutor.executeScript("window.history.go(-1)");
-        profilePage.clickSecurityData();
-        assertEquals("https://ru.wargaming.net/personal/privacy/", driver.getCurrentUrl());
-        javascriptExecutor.executeScript("window.history.go(-1)");
-        profilePage.clickMyCards();
-        assertTrue(driver.getCurrentUrl().startsWith("https://card.wargaming.net/cards"));
-        javascriptExecutor.executeScript("window.history.go(-1)");
+    public static void setUp() {
+        login = ConfigurationProvider.getProperty("login");
+        password = ConfigurationProvider.getProperty("password");
+        driverList = initWebDriver();
     }
 
     @Test
-    public void subscriptionTest(){
-        profilePage.clickSubscribe();
-        assertEquals("https://ru.wargaming.net/personal/subscriptions/", driver.getCurrentUrl());
-        assertTrue(profilePage.getStatusCheckboxAccount());
-        profilePage.setCheckboxAccount();
-        assertFalse(profilePage.getStatusCheckboxAccount());
-        assertTrue(profilePage.getStatusCheckboxEvents());
-        profilePage.setCheckboxEvents();
-        assertFalse(profilePage.getStatusCheckboxEvents());
-        profilePage.clickSaveSubscribeButton();
-        driver.manage().timeouts().implicitlyWait(1000, TimeUnit.SECONDS);
-        assertFalse(profilePage.getStatusCheckboxEvents());
-        assertFalse(profilePage.getStatusCheckboxAccount());
-        javascriptExecutor.executeScript("window.history.go(-1)");
+    public void checkSomeLinkInUserMenuTest() {
+        driverList.forEach(webDriver -> {
+            initElement(webDriver);
+            if (!profilePage.isAccountButtonExist()) {
+                mainPage.clickLogin();
+                Init.loginPage.inputLogin(login);
+                Init.loginPage.inputPassword(password);
+                Init.loginPage.clickSubmit();
+            }
+            profilePage.clickUserMenuHolder();
+            profilePage.goToPersonalArea();
+            profilePage.clickChangeNickName();
+            assertEquals("https://ru.wargaming.net/personal/nickname_change/", webDriver.getCurrentUrl());
+            javascriptExecutor.executeScript("window.history.go(-1)");
+            profilePage.clickSecurityData();
+            assertEquals("https://ru.wargaming.net/personal/privacy/", webDriver.getCurrentUrl());
+            javascriptExecutor.executeScript("window.history.go(-1)");
+            profilePage.clickMyCards();
+            assertTrue(webDriver.getCurrentUrl().startsWith("https://card.wargaming.net/cards"));
+            javascriptExecutor.executeScript("window.history.go(-1)");
+        });
     }
 
     @Test
-    public void changePasswordTest(){
-        profilePage.clickPasswordEditorButton();
-        profilePage.changePassword("Vasilisa2023");
-        profilePage.submitPassword();
-        assertEquals("Пароль для вашего аккаунта успешно изменён.", profilePage.getMessageSuccessChangePassword());
-        profilePage.clickFinishChange();
+    public void subscriptionTest() {
+        driverList.forEach(webDriver -> {
+            initElement(webDriver);
+            if (!profilePage.isAccountButtonExist()) {
+                mainPage.clickLogin();
+                Init.loginPage.inputLogin(login);
+                Init.loginPage.inputPassword(password);
+                Init.loginPage.clickSubmit();
+            }
+            profilePage.clickUserMenuHolder();
+            profilePage.goToPersonalArea();
+            profilePage.clickSubscribe();
+            assertEquals("https://ru.wargaming.net/personal/subscriptions/", webDriver.getCurrentUrl());
+            assertTrue(profilePage.getStatusCheckboxAccount());
+            profilePage.setCheckboxAccount();
+            assertFalse(profilePage.getStatusCheckboxAccount());
+            assertTrue(profilePage.getStatusCheckboxEvents());
+            profilePage.setCheckboxEvents();
+            assertFalse(profilePage.getStatusCheckboxEvents());
+            profilePage.clickSaveSubscribeButton();
+            webDriver.manage().timeouts().implicitlyWait(1000, TimeUnit.SECONDS);
+            assertFalse(profilePage.getStatusCheckboxEvents());
+            assertFalse(profilePage.getStatusCheckboxAccount());
+            javascriptExecutor.executeScript("window.history.go(-1)");
+        });
     }
 
     @Test
-    public void bonusCodeTest(){
-        profilePage.clickUserMenuHolder();
-        profilePage.clickBonusCode();
-        Assertions.assertTrue(driver.getCurrentUrl().startsWith("https://ru.wargaming.net/shop/redeem/"));
+    public void bonusCodeTest() {
+        driverList.forEach(webDriver -> {
+            initElement(webDriver);
+            if (!profilePage.isAccountButtonExist()) {
+                mainPage.clickLogin();
+                Init.loginPage.inputLogin(login);
+                Init.loginPage.inputPassword(password);
+                Init.loginPage.clickSubmit();
+            }
+            profilePage.clickUserMenuHolder();
+            profilePage.clickBonusCode();
+            wait.until(ExpectedConditions.urlMatches("https://ru.wargaming.net/shop/redeem/"));
+            Assertions.assertTrue(webDriver.getCurrentUrl().startsWith("https://ru.wargaming.net/shop/redeem/"));
+        });
     }
 
     @AfterAll
-    public static void  quit() {
-        driver.quit();
+    public static void quit() {
+        driverList.forEach(webDriver -> {
+            initElement(webDriver);
+            webDriver.quit();
+        });
     }
 }

@@ -10,7 +10,7 @@ public class ConfigurationProvider {
     private static Properties properties;
     static {
         try{
-            fileInputStream=new FileInputStream("/home/vasilisa/Lab3OfTpo/src/main/resources/configuration.properties");
+            fileInputStream=new FileInputStream("C:\\Users\\Vasilisa\\Lab3OfTpo\\src\\main\\resources\\configuration.properties");
             properties=new Properties();
             properties.load(fileInputStream);
         }catch (IOException e){

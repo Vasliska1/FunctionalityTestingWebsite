@@ -1,56 +1,81 @@
 package unauthorized;
 
-import configuration.ConfigurationSetUpTest;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
-public class SectionMediaTest extends ConfigurationSetUpTest {
+import java.util.List;
+
+import static configuration.Init.*;
+
+public class SectionMediaTest {
     private static JavascriptExecutor javascriptExecutor;
 
+    public static List<WebDriver> driverList;
+
     @BeforeAll
-    public static void setupMedia(){
-        javascriptExecutor = (JavascriptExecutor) driver;
-        mainPage.clickCommunitySubmenu();
-        mainPage.clickMediaDropDownButton();
+    public static void setUp() {
+        driverList = initWebDriver();
     }
 
     @Test
-    public void openVideo(){
-        mediaPage.clickVideo();
-        Assertions.assertTrue(driver.getCurrentUrl().startsWith("https://worldoftanks.ru/ru/media/9/"));
-        javascriptExecutor.executeScript("window.history.go(-1)");
+    public void openVideo() {
+        driverList.forEach(webDriver -> {
+            initElement(webDriver);
+            mainPage.clickCommunitySubmenu();
+            mainPage.clickMediaDropDownButton();
+            mediaPage.clickVideo();
+            wait.until(ExpectedConditions.urlMatches("https://worldoftanks.ru/ru/media/9/"));
+            Assertions.assertTrue(webDriver.getCurrentUrl().startsWith("https://worldoftanks.ru/ru/media/9/"));
+        });
     }
 
     @Test
-    public void openArt(){
-        mediaPage.clickArt();
-        Assertions.assertTrue(driver.getCurrentUrl().startsWith("https://worldoftanks.ru/ru/media/1/"));
-        javascriptExecutor.executeScript("window.history.go(-1)");
+    public void openArt() {
+        driverList.forEach(webDriver -> {
+            initElement(webDriver);
+            mainPage.clickCommunitySubmenu();
+            mainPage.clickMediaDropDownButton();
+            mediaPage.clickArt();
+            wait.until(ExpectedConditions.urlMatches("https://worldoftanks.ru/ru/media/1/"));
+            Assertions.assertTrue(webDriver.getCurrentUrl().startsWith("https://worldoftanks.ru/ru/media/1/"));
+        });
     }
 
     @Test
     public void openModel() {
-        mediaPage.clickModel();
-        Assertions.assertTrue(driver.getCurrentUrl().startsWith("https://worldoftanks.ru/ru/media/10"));
-        String window = driver.getWindowHandle();
-        mediaPage.clickLink();
-        driver.switchTo().window(window);
-        javascriptExecutor.executeScript("window.history.go(-1)");
+        driverList.forEach(webDriver -> {
+            initElement(webDriver);
+            mainPage.clickCommunitySubmenu();
+            mainPage.clickMediaDropDownButton();
+            mediaPage.clickModel();
+            wait.until(ExpectedConditions.urlMatches("https://worldoftanks.ru/ru/media/10"));
+            Assertions.assertTrue(webDriver.getCurrentUrl().startsWith("https://worldoftanks.ru/ru/media/10"));
+        });
     }
 
     @Test
-    public void openComic(){
-        mediaPage.clickComic();
-        Assertions.assertTrue(driver.getCurrentUrl().startsWith("https://worldoftanks.ru/ru/media/12"));
-        javascriptExecutor.executeScript("window.history.go(-1)");
+    public void openComic() {
+        driverList.forEach(webDriver -> {
+            initElement(webDriver);
+            mainPage.clickCommunitySubmenu();
+            mainPage.clickMediaDropDownButton();
+            mediaPage.clickComic();
+            wait.until(ExpectedConditions.urlMatches("https://worldoftanks.ru/ru/media/12"));
+            Assertions.assertTrue(webDriver.getCurrentUrl().startsWith("https://worldoftanks.ru/ru/media/12"));
+        });
     }
 
     @AfterAll
-    public static void  quit() {
-        driver.quit();
+    public static void quit() {
+        driverList.forEach(webDriver -> {
+            initElement(webDriver);
+            webDriver.close();
+        });
     }
 }
