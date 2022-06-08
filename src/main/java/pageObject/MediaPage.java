@@ -37,38 +37,17 @@ public class MediaPage {
         wait = new WebDriverWait(driver, 30);
     }
 
-    public String getTitle(){
-        return title.getText();
-    }
-
-    public void clickLogo() {
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@class=\"nav-submenu_link\"]")));
-        logo.click();
-    }
-
     public void clickVideo() {
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[@class=\"b-icon-video\"]")));
         videos.get(0).click();
     }
 
-    public void clickArt(){
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@class=\"b-img-signature_link\"]")));
-        arts.get(7).click();
-    }
 
     public void clickModel(){
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[@class=\"b-img-signature_img\"]")));
         arts.get(13).click();
-    }
-
-    public void clickLink() {
-        wait.until(ExpectedConditions.elementToBeClickable(link));
-        link.click();
     }
 
     public void clickComic(){
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[@class=\"b-img-signature_img\"]")));
         arts.get(19).click();
     }
-
 }

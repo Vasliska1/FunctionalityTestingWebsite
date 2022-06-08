@@ -1,4 +1,4 @@
-package authorized;
+package unauthorized;
 
 import configuration.Init;
 import org.junit.jupiter.api.AfterAll;
